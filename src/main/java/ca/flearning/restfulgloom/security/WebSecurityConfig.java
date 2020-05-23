@@ -33,11 +33,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			// root, home, & registration open to public
 			.antMatchers("/api", "/api/auth**").permitAll()
-			//allow h2 console access to admins only
-//			.antMatchers("/h2-console/**").hasRole("Admin")
 			// force JWT authentication on all endpoints
-			.antMatchers("/api/dm**").authenticated().and()
+			.antMatchers("/api/dm**", "/api/boardstate**").authenticated().and()
 				.addFilter(new JWTAuthenticationFilter(authenticationManager()));
+				// TODO: this is a terrible pattern to opt-in to being authenticated
+				//  because we're bound to forget to add one.
+				//  This should be opt-out of authentication
 			// require Google oath2
 //			.anyRequest().authenticated().and().oauth2Login();
 

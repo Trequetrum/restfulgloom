@@ -9,8 +9,24 @@ public class Monster extends Character {
      */
     private String monsterType;
 
-    private int move;
-    private int atk;
-    private int range;
+    private int move=2;
+    private int atk=2;
+    private int range=0;
     private Action action;
+    private boolean isSummon=false;
+
+    public int getStandeeNumber() { return standeeNumber; }
+    public void setStandeeNumber(int standeeNumber) { this.standeeNumber = standeeNumber; }
+    public String getMonsterType() { return monsterType; }
+    public void setMonsterType(String monsterType) { this.monsterType = monsterType; }
+    public int getMove() { return move; }
+    public void setMove(int move) { this.move = move; }
+    public int getAtk() { return atk; }
+    public void setAtk(int atk) { this.atk = atk; }
+    public int getRange() { return range; }
+    public void setRange(int range) { this.range = range; }
+    public Action getAction() { return action; }
+    public void setAction(Action action) { this.action = action; }
+    public boolean isSummon() { return isSummon; }
+    public void setSummon(boolean summon) { isSummon = summon; }
 }

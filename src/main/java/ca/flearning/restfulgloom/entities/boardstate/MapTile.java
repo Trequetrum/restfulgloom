@@ -12,4 +12,7 @@ public class MapTile {
 
     // TODO some way to map obstacles, doors, traps, treasure, coins, etc.
 
+
+    public String getTileNum() { return tileNum; }
+    public void setTileNum(String tileNum) { this.tileNum = tileNum; }
 }
