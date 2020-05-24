@@ -37,11 +37,6 @@
 										{
 											"key": "name",
 											"value": "mike"
-										},
-										{
-											"key": "role",
-											"value": "User",
-											"disabled": true
 										}
 									]
 								}
@@ -58,13 +53,12 @@
 									"raw": ""
 								},
 								"url": {
-									"raw": "{{base_url}}/api/v1/auth/refresh/{{refreshToken}}",
+									"raw": "{{base_url}}/api/auth/refresh/{{refreshToken}}",
 									"host": [
 										"{{base_url}}"
 									],
 									"path": [
 										"api",
-										"v1",
 										"auth",
 										"refresh",
 										"{{refreshToken}}"
@@ -102,6 +96,126 @@
 					"_postman_isSubFolder": true
 				},
 				{
+					"name": "boardstate",
+					"item": [
+						{
+							"name": "addPlayer",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\t\n\t\"player\": {\n\t\t\"characterClass\":\"Brute\"\n\t},\n\t\"boardstate\":{{boardstate}}\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/boardstate/addplayer",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"boardstate",
+										"addplayer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "addSummon",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\t\n\t\"summon\": {\n\t},\n\t\"boardstate\":{{boardstate}}\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/boardstate/addsummon/5",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"boardstate",
+										"addsummon",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "endTurn",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\"boardstate\":{{boardstate}}}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/boardstate/endturn",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"boardstate",
+										"endturn"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "/",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{base_url}}/api/boardstate/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"boardstate",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
 					"name": "/",
 					"request": {
 						"method": "GET",
@@ -132,12 +246,10 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/dm",
-							"protocol": "http",
+							"raw": "{{base_url}}/api/dm",
 							"host": [
-								"localhost"
+								"{{base_url}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"dm"

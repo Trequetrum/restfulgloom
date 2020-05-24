@@ -12,7 +12,7 @@ public class Monster extends Character {
     private int move=2;
     private int atk=2;
     private int range=0;
-    private Action action;
+    private Action turnAction;
     private boolean isSummon=false;
 
     public int getStandeeNumber() { return standeeNumber; }
@@ -25,8 +25,8 @@ public class Monster extends Character {
     public void setAtk(int atk) { this.atk = atk; }
     public int getRange() { return range; }
     public void setRange(int range) { this.range = range; }
-    public Action getAction() { return action; }
-    public void setAction(Action action) { this.action = action; }
+    public Action getTurnAction() { return turnAction; }
+    public void setTurnAction(Action turnAction) { this.turnAction = turnAction; }
     public boolean isSummon() { return isSummon; }
     public void setSummon(boolean summon) { isSummon = summon; }
 }
