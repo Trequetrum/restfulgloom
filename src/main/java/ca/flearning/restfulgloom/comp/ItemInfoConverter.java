@@ -7,8 +7,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ca.flearning.restfulgloom.entities.Item;
 import ca.flearning.restfulgloom.entities.Note;
+import ca.flearning.restfulgloom.entities.repassets.Item;
 
 public class ItemInfoConverter {
     	

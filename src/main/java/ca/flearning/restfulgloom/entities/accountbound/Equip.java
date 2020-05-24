@@ -1,4 +1,4 @@
-package ca.flearning.restfulgloom.entities;
+package ca.flearning.restfulgloom.entities.accountbound;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +10,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
+
+import ca.flearning.restfulgloom.entities.repassets.Item;
 
 @JsonFilter("JacksonIgnoreNullFalseZeroFilter")
 @Entity

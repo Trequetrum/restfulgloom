@@ -1,6 +1,8 @@
-package ca.flearning.restfulgloom.entities;
+package ca.flearning.restfulgloom.entities.accountbound;
 
 import java.io.Serializable;
+
+import ca.flearning.restfulgloom.entities.repassets.Item;
 
 public class EquipId implements Serializable{
 

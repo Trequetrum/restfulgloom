@@ -32,15 +32,15 @@ import org.springframework.util.Base64Utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ca.flearning.restfulgloom.entities.AbilityActionLine;
-import ca.flearning.restfulgloom.entities.AbilityCard;
-import ca.flearning.restfulgloom.entities.Equip;
-import ca.flearning.restfulgloom.entities.GCharacter;
-import ca.flearning.restfulgloom.entities.GClass;
-import ca.flearning.restfulgloom.entities.Item;
 import ca.flearning.restfulgloom.entities.Note;
-import ca.flearning.restfulgloom.entities.Perk;
-import ca.flearning.restfulgloom.entities.Wallet;
+import ca.flearning.restfulgloom.entities.accountbound.Equip;
+import ca.flearning.restfulgloom.entities.accountbound.GCharacter;
+import ca.flearning.restfulgloom.entities.accountbound.Wallet;
+import ca.flearning.restfulgloom.entities.repassets.AbilityActionLine;
+import ca.flearning.restfulgloom.entities.repassets.AbilityCard;
+import ca.flearning.restfulgloom.entities.repassets.GClass;
+import ca.flearning.restfulgloom.entities.repassets.Item;
+import ca.flearning.restfulgloom.entities.repassets.Perk;
 import ca.flearning.restfulgloom.security.JWTToken;
 
 // This is not a production level class, so warnings for unused functions and such 

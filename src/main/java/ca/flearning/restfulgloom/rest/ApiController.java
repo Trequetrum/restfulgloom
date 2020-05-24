@@ -8,7 +8,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.Link;
 
-import ca.flearning.restfulgloom.rest.hateoas.MessageModel;
+import ca.flearning.restfulgloom.rest.hateoas.MessageDto;
 
 @RestController
 @RequestMapping("/api")
@@ -21,8 +21,8 @@ public class ApiController {
 	private String authenticateMessage;
 
 	@GetMapping()
-	public MessageModel rootApiEndpoint(){
-		MessageModel topLinks = new MessageModel(welcomeMessage);
+	public MessageDto rootApiEndpoint(){
+		MessageDto topLinks = new MessageDto(welcomeMessage);
 		
 		topLinks.add(linkTo(ApiController.class).withSelfRel());
 		topLinks.add(linkTo(methodOn(ApiController.class).auth()).withRel("authenticate"));
@@ -32,8 +32,8 @@ public class ApiController {
 	}
 	
 	@GetMapping("/auth")
-	public MessageModel auth(){
-		MessageModel authenticateLinks = new MessageModel(authenticateMessage);
+	public MessageDto auth(){
+		MessageDto authenticateLinks = new MessageDto(authenticateMessage);
 		
 		authenticateLinks.add(linkTo(methodOn(ApiController.class).auth()).withSelfRel());
 		authenticateLinks.add(linkTo(methodOn(ApiController.class).rootApiEndpoint()).withRel("api"));
@@ -44,8 +44,8 @@ public class ApiController {
 	}
 	
 	@GetMapping("/auth/devlogin")
-	public MessageModel devLogin(){
-		MessageModel getDevLogin = new MessageModel("Uhm. Why iz you GET here? POST plz");
+	public MessageDto devLogin(){
+		MessageDto getDevLogin = new MessageDto("Uhm. Why iz you GET here? POST plz");
 		getDevLogin.add(linkTo(methodOn(ApiController.class).devLogin()).withSelfRel());
 		getDevLogin.add(linkTo(methodOn(ApiController.class).rootApiEndpoint()).withRel("api"));
 		return getDevLogin;

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
 
-import ca.flearning.restfulgloom.entities.GClass;
+import ca.flearning.restfulgloom.entities.repassets.GClass;
 
 @Configuration
 public class ResourceProcessorsConfig {

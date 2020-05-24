@@ -1,4 +1,4 @@
-package ca.flearning.restfulgloom.entities;
+package ca.flearning.restfulgloom.entities.accountbound;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
+
+import ca.flearning.restfulgloom.entities.Note;
+import ca.flearning.restfulgloom.entities.repassets.AbilityCard;
+import ca.flearning.restfulgloom.entities.repassets.GClass;
+import ca.flearning.restfulgloom.entities.repassets.Perk;
+import ca.flearning.restfulgloom.entities.repassets.PersonalQuest;
 
 @JsonFilter("JacksonIgnoreNullFalseZeroFilter")
 @Entity

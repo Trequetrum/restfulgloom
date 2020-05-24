@@ -1,25 +1,35 @@
 package ca.flearning.restfulgloom.rest;
 
-import ca.flearning.restfulgloom.dao.RefreshTokenRepository;
-import ca.flearning.restfulgloom.security.JWTToken;
-import ca.flearning.restfulgloom.entities.RefreshToken;
-import ca.flearning.restfulgloom.rest.errors.ForbiddenException;
-import ca.flearning.restfulgloom.security.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import ca.flearning.restfulgloom.dao.RefreshTokenRepository;
+import ca.flearning.restfulgloom.entities.RefreshToken;
+import ca.flearning.restfulgloom.rest.errors.ForbiddenException;
+import ca.flearning.restfulgloom.rest.hateoas.TokenDto;
+import ca.flearning.restfulgloom.security.GenerateRefreshToken;
+import ca.flearning.restfulgloom.security.JWTToken;
+import ca.flearning.restfulgloom.security.User;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequestMapping("/api/auth")
 public class LoginController {
 
-    @Autowired
-    private RefreshTokenRepository refreshTokenRepository;
-
+	@Autowired
+    private static RefreshTokenRepository refreshTokenRepository;
+	
     @PostMapping("/devlogin")
-    public JwtAndRefresh devLogin(@RequestParam(value = "name", defaultValue = "World") String name)
+    public TokenDto devLogin(@RequestParam(value = "name", defaultValue = "World") String name)
     {
         User user = new User();
         user.setName(name);
@@ -27,16 +37,17 @@ public class LoginController {
 
 
         // create a refresh token and persist it to the db
-        RefreshToken refreshToken = createRefreshToken(user);
+        RefreshToken refreshToken = GenerateRefreshToken.generateToken(user);
 
-        // TODO: this should be HATEOAS and return a link to the refresh URI (complete with token path)
-        // TODO: or should login be an exception to HATEOAS?
-        return new JwtAndRefresh(jwt.getCredentials(), refreshToken);
+        // return token with a link to refresh the token
+        TokenDto rtn = new TokenDto(jwt.getCredentials().getToken());
+        rtn.add(linkTo(methodOn(LoginController.class).refresh(refreshToken.getToken())).withRel("refresh"));
+        return rtn;
     }
 
 
     @GetMapping("/refresh/{refreshToken}")
-    public JwtAndRefresh refresh(@PathVariable("refreshToken") String refreshTokenStr) {
+    public TokenDto refresh(@PathVariable("refreshToken") String refreshTokenStr) {
         JWTToken token;
 
         List<RefreshToken> refreshTokenList = refreshTokenRepository.findByToken(refreshTokenStr);
@@ -58,12 +69,13 @@ public class LoginController {
             token = new JWTToken(user);
 
             // create a refresh token and persist it to the db
-            RefreshToken newRefreshToken = createRefreshToken(user);
-
-
-            // TODO: this should be HATEOAS and return a link to the refresh URI (complete with token path)
-            // TODO: or should login be an exception to HATEOAS?
-            return new JwtAndRefresh(token.getCredentials(), newRefreshToken);
+            RefreshToken newRefreshToken = GenerateRefreshToken.generateToken(user);
+            
+           
+            // return token with a link to refresh the token
+            TokenDto rtn = new TokenDto(token.getCredentials().getToken());
+            rtn.add(linkTo(methodOn(LoginController.class).refresh(newRefreshToken.getToken())).withRel("refresh"));
+            return rtn;
         } else {
             // uhh, panic? The DB should enforce that as a unique field.
             throw new RuntimeException("DB should never have multiple entries for the same refresh token");
@@ -71,55 +83,6 @@ public class LoginController {
         // no return because it's unreachable.
     }
 
-    private RefreshToken createRefreshToken(User user) {
-        // create a refresh token and persist it to the db
-        RefreshToken refreshToken = RefreshToken.generateToken();
-        refreshToken.setUsername(user.getName());
-        try {
-            refreshTokenRepository.save(refreshToken);
-        } catch (Exception e) {
-            // probably the random token happened to be a duplicate, and the DB threw
-            // a constraint violation.
-            // Try again.
-
-            refreshToken = RefreshToken.generateToken();
-            refreshToken.setUsername(user.getName());
-            refreshTokenRepository.save(refreshToken);
-        }
-
-        return refreshToken;
-    }
-
-    class JwtAndRefresh {
-        String token;
-        String refresh;
-
-        public JwtAndRefresh(String token, String refresh) {
-            this.token = token;
-            this.refresh = refresh;
-        }
-
-        public JwtAndRefresh(JWTToken.Token jwttoken, RefreshToken refreshtoken) {
-            this.token = jwttoken.getToken();
-            this.refresh = refreshtoken.getToken();
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public void setToken(String token) {
-            this.token = token;
-        }
-
-        public String getRefresh() {
-            return refresh;
-        }
-
-        public void setRefresh(String refresh) {
-            this.refresh = refresh;
-        }
-    }
     
     
 }

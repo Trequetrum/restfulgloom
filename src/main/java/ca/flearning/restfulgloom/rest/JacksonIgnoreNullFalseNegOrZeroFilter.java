@@ -24,7 +24,6 @@ public class JacksonIgnoreNullFalseNegOrZeroFilter extends SimpleBeanPropertyFil
 			throws Exception {
 		
 		if (include(writer)) {
-			
 			Object writerValue = null;
 			try {
 				writerValue = writer.getMember().getValue(pojo);

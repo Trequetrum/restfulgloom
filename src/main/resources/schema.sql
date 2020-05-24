@@ -7,6 +7,7 @@ create table users(
 	enabled boolean not null
 );
 
+-- JPA modelled as a collection table
 create table authorities (
 	username varchar_ignorecase(60) not null,
 	authority varchar_ignorecase(60) not null,
@@ -16,10 +17,10 @@ create unique index ix_auth_username on authorities (username,authority);
 
 create table REFRESHTOKENS (
 	token_id BIGINT not null AUTO_INCREMENT,
-    token varchar_ignorecase(80) unique not null,
-    expiry TIMESTAMP not null,
-    username varchar_ignorecase(50) not null,
-    primary key(token_id)
+	token varchar_ignorecase(80) unique not null,
+	expiry TIMESTAMP not null,
+	username varchar_ignorecase(60) not null,
+	primary key(token_id)
 --    constraint fk_refreshtokens_users foreign key(username) references users(username)
 );
 --END SECURITY stuff -- Access Control
@@ -183,9 +184,37 @@ create table CHARACTERS_ITEMS(
 	constraint FK_CI_ITEM foreign key (item_id) references ITEMS (item_id)
 );
 
+create table CAMPAIGNS(
+	campaign_id BIGINT not null AUTO_INCREMENT,
+	primary key(campaign_id)
+);
+
+create table PARTIES(
+	party_id BIGINT not null AUTO_INCREMENT,
+	campaign_id BIGINT,
+
+	primary key(party_id)
+);
+
+create table USER_CAMPAIGNS(
+	username varchar_ignorecase(60) not null,
+	campaign_id BIGINT not null,
+	primary key(username, campaign_id),
+	constraint FK_UCa_USER foreign key (username) references users (username),
+	constraint FK_UCa_CHARACTER foreign key (campaign_id) references CAMPAIGNS (campaign_id)
+);
+
 -- ----------------------------------------------------
 -- Gloomhaven Join Tables
 -- ----------------------------------------------------
+create table USER_CHARACTERS(
+	username varchar_ignorecase(60) not null,
+	character_id BIGINT not null,
+	primary key(username, character_id),
+	constraint FK_UCh_USER foreign key (username) references users (username),
+	constraint FK_UCh_CHARACTER foreign key (character_id) references CHARACTERS (character_id)
+);
+
 create table CHARACTERS_ABILITY_CARDS(
 	character_id BIGINT not null,
 	ability_card_id BIGINT not null,

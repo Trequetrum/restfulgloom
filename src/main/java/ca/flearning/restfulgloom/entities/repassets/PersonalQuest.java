@@ -1,4 +1,4 @@
-package ca.flearning.restfulgloom.entities;
+package ca.flearning.restfulgloom.entities.repassets;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

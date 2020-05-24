@@ -1,4 +1,4 @@
-package ca.flearning.restfulgloom.entities;
+package ca.flearning.restfulgloom.entities.accountbound;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

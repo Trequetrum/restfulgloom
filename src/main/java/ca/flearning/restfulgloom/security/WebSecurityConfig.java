@@ -3,6 +3,7 @@ package ca.flearning.restfulgloom.security;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,6 +18,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
+	@Value("${ca.flearning.restfulgloom.api.security.enabled}")
+	private boolean secure;
+	
 	@Autowired
 	private DataSource datasource;
 
@@ -27,9 +31,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-
+		
+		//We can effectively disable spring security
+		if(!secure) {
+			http.authorizeRequests().antMatchers("/**").permitAll();
+			System.out.println("  >> Warning: Spring security disabled");
+		}else {
+		
 		// TODO: even for the permitAll() paths, the auth filter is run and puts
-		// TODO: junk in the command-line logs.
+		// 		junk in the command-line logs.
 		http.authorizeRequests()
 			// root, home, & registration open to public
 			.antMatchers("/api", "/api/auth**").permitAll()
@@ -40,7 +50,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.addFilter(new JWTAuthenticationFilter(authenticationManager()));
 			// require Google oath2
 //			.anyRequest().authenticated().and().oauth2Login();
-
+		}
 
 		// disable session creation on Spring Security (JSESSIONID);
 		// don't need it since we have a custom JWT

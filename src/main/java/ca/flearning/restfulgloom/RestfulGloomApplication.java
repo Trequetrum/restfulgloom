@@ -2,6 +2,13 @@ package ca.flearning.restfulgloom;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+
+import ca.flearning.restfulgloom.rest.JacksonIgnoreNullFalseNegOrZeroFilter;
 
 /*******************
  *  @SpringBootApplication annotation is really just a grouping of three other annotations.
@@ -37,5 +44,21 @@ public class RestfulGloomApplication {
 		 */
 		SpringApplication.run(RestfulGloomApplication.class, args);
 	}
+	
+	@Bean
+	public ObjectMapper tolerantObjectMapper() {
+	    
+	    final JsonFactory jsonFactory = new JsonFactory();
+	    ObjectMapper objectMapper = new ObjectMapper(jsonFactory);
+	    
+	    SimpleFilterProvider filters = new SimpleFilterProvider();
+		filters.addFilter("JacksonIgnoreNullFalseZeroFilter", new JacksonIgnoreNullFalseNegOrZeroFilter(true));
+		filters.addFilter("JacksonIgnoreNullFalseNegFilter", new JacksonIgnoreNullFalseNegOrZeroFilter(false));
+		objectMapper.setFilterProvider(filters);
+	    
+	    return objectMapper;
+	}
+
+
 
 }
