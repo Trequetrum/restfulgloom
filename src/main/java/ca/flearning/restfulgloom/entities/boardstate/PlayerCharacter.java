@@ -9,9 +9,23 @@ public class PlayerCharacter extends Character {
      */
     private String characterClass;
 
+    private int coinsHeld;
     private ArrayList<Item> items = new ArrayList<>();
     private ArrayList<Monster> summons = new ArrayList<>();
     private boolean longResting;
+
+    /**
+     *
+     * @param summon
+     * @throws Exception if the chactare's id is not unique in the array being inserted into.
+     */
+    public void addSummon(Monster summon) {
+        Boardstate.checkIdIsUnique(summon, summons);
+        summon.setInitiative(getInitiative());
+        summons.add(summon);
+    }
+
+    /* ~~~ Getters and Setters ~~~ */
 
     public String getCharacterClass() { return characterClass; }
     public void setCharacterClass(String characterClass) { this.characterClass = characterClass; }
@@ -21,6 +35,8 @@ public class PlayerCharacter extends Character {
     public void setSummons(ArrayList<Monster> summons) { this.summons = summons; }
     public boolean isLongResting() { return longResting; }
     public void setLongResting(boolean longResting) { this.longResting = longResting; }
+    public int getCoinsHeld() { return coinsHeld; }
+    public void setCoinsHeld(int coinsHeld) { this.coinsHeld = coinsHeld; }
 
     @Override
     public String toString() {

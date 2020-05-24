@@ -1,6 +1,6 @@
 package ca.flearning.restfulgloom.entities.boardstate;
 
-public class Status {
+public class StatusAilments {
 
     public enum Statuses {
         POISON,

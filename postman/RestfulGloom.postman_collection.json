@@ -112,7 +112,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\t\n\t\"player\": {\n\t\t\"characterClass\":\"Brute\"\n\t},\n\t\"boardstate\":{{boardstate}}\n}"
+									"raw": "{\t\n\t\"player\": {\n\t\t\"characterClass\":\"Brute\",\n\t},\n\t\"boardstate\":{{boardstate}}\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/api/boardstate/addplayer",
@@ -123,6 +123,36 @@
 										"api",
 										"boardstate",
 										"addplayer"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "addMonster",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\t\n\t\"monster\": {\n\t\t\"monsterType\":\"Living Bones\"\n\t},\n\t\"boardstate\":{{boardstate}}\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/boardstate/addmonster",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"boardstate",
+										"addmonster"
 									]
 								}
 							},

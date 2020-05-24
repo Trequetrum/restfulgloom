@@ -4,6 +4,7 @@ import ca.flearning.restfulgloom.entities.boardstate.Boardstate;
 import ca.flearning.restfulgloom.entities.boardstate.Monster;
 import ca.flearning.restfulgloom.entities.boardstate.PlayerCharacter;
 import ca.flearning.restfulgloom.rest.jsonwrappers.BoardstateWrapper;
+import ca.flearning.restfulgloom.rest.jsonwrappers.MonsterWrapper;
 import ca.flearning.restfulgloom.rest.jsonwrappers.PlayerCharacterWrapper;
 import ca.flearning.restfulgloom.rest.jsonwrappers.SummonWrapper;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -37,11 +38,11 @@ public class BoardstateControllers {
      */
     @PostMapping(value="/addPlayer", consumes="application/json", produces="application/json")
     @ResponseBody
-    public BoardstateWrapper addPlayerCharacter(@RequestBody PlayerCharacterWrapper playerCharacterWrapper,
+    public BoardstateWrapper addPlayerCharacter(@RequestBody PlayerCharacterWrapper wrapper,
                                           HttpServletRequest request, HttpServletResponse response) {
 
-        Boardstate boardstate = getBoardstate(playerCharacterWrapper);
-        PlayerCharacter player = playerCharacterWrapper.getPlayer();
+        Boardstate boardstate = getBoardstate(wrapper);
+        PlayerCharacter player = wrapper.getPlayer();
         if(player == null) {
             throw new HttpMessageNotReadableException("'player' missing from POST body.");
         }
@@ -52,11 +53,11 @@ public class BoardstateControllers {
 
     @PostMapping(value="/addSummon/{playerId}", consumes="application/json", produces="application/json")
     @ResponseBody
-    public BoardstateWrapper addSummon(@RequestBody SummonWrapper summonWrapper,
+    public BoardstateWrapper addSummon(@RequestBody SummonWrapper wrapper,
                                        @PathVariable("playerId") int playerId) {
 
-        Boardstate boardstate = getBoardstate(summonWrapper);
-        Monster summon = summonWrapper.getSummon();
+        Boardstate boardstate = getBoardstate(wrapper);
+        Monster summon = wrapper.getSummon();
         if(summon == null) {
             throw new HttpMessageNotReadableException("'summon' missing from POST body.");
         }
@@ -66,13 +67,27 @@ public class BoardstateControllers {
         // add this summon to the referenced player
         for(PlayerCharacter player : boardstate.getPlayers()) {
             if(player.getId() == playerId) {
-                player.getSummons().add(summon);
+                player.addSummon(summon);
                 return new BoardstateWrapper(boardstate);
             }
         }
 
         // fail
         throw new HttpMessageNotReadableException("Boardstate does not contain a player with id "+playerId);
+    }
+    
+    @PostMapping(value="/addMonster", consumes="application/json", produces="application/json")
+    @ResponseBody
+    public BoardstateWrapper addMonster(@RequestBody MonsterWrapper wrapper) {
+
+        Boardstate boardstate = getBoardstate(wrapper);
+        Monster monster = wrapper.getMonster();
+        if(monster == null) {
+            throw new HttpMessageNotReadableException("'monster' missing from POST body.");
+        }
+
+        boardstate.addMontster(monster);
+        return new BoardstateWrapper(boardstate);
     }
 
     @PostMapping(value="/endturn", consumes="application/json", produces="application/json")
@@ -83,15 +98,17 @@ public class BoardstateControllers {
             boardstate = new Boardstate();
         }
 
-        boardstate.setTurn(boardstate.getTurn()+1);
-
         // TODO foreach: PlayerCharacter { process long rest }
 
-        // TODO foreach: Character { remove initiative }
+        // foreach: Character { remove initiative }
+        for(PlayerCharacter player : boardstate.getPlayers()) {
+            player.setInitiative(0.0);
+        }
+
+        boardstate.setTurn(boardstate.getTurn()+1);
 
         return new BoardstateWrapper(boardstate);
     }
-
 
     private Boardstate getBoardstate(BoardstateWrapper wrapper) {
         Boardstate boardstate = wrapper.getBoardstate();
