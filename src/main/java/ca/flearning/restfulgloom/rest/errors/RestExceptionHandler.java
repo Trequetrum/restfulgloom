@@ -156,6 +156,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 	*****************************/
 	@ExceptionHandler(Exception.class)
 	protected ResponseEntity<Object> handleException(Exception ex) {
+		ex.printStackTrace();
 		return buildResponseEntity(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "error", ex));
 	}
    

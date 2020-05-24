@@ -2,7 +2,7 @@ package ca.flearning.restfulgloom.entities.boardstate;
 
 import java.util.ArrayList;
 
-public class Character {
+public class Character extends BoardstateEntity {
     private int health;
     private int healthMax;
     private double initiative;  // Thought: to avoid ties make this a double and do 21.0, 21.01, etc
