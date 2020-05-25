@@ -2,6 +2,7 @@ package ca.flearning.restfulgloom.rest.errors;
 
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
@@ -26,7 +28,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 // All exceptions used by our rest endpoints should be handled here. If handled
 // elsewhere, pay attention to @order, as this swallows up all exceptions eventually
-@ControllerAdvice(basePackages = "ca.flearning.restfulgloom.rest")
+@ControllerAdvice//(basePackages = "ca.flearning.restfulgloom.rest")
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 	/*****************************
@@ -153,16 +155,22 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 	/*****************************
 	* Handle Everything Else
+	 * @throws Exception 
 	*****************************/
 	@ExceptionHandler(Exception.class)
-	protected ResponseEntity<Object> handleException(Exception ex) {
-		return buildResponseEntity(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "error", ex));
+	protected ResponseEntity<Object> handleException(Exception ex) throws Exception {
+		if (AnnotationUtils.findAnnotation(ex.getClass(), ResponseStatus.class) != null) {
+			System.out.println(" >> Throwing Error");
+			throw ex;
+		}
+		return buildResponseEntity(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, "error -->", ex));
 	}
    
 	/*****************************
     * Turn an ApiError into a ResponseEntity
     *****************************/
 	private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
+		System.out.println(" >> Handling Error: " + apiError.getMessage());
 		return new ResponseEntity<>(apiError, apiError.getStatus());
 	}
 }

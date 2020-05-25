@@ -17,7 +17,7 @@ public class ResourceProcessorsConfig {
 			@Override
 		  	public EntityModel<GClass> process(EntityModel<GClass> em) {
 				//em.add(new Link("https://github.com/", "github-link"));
-		    	return em;
+				return em;
 		  	}
 		};
 	}

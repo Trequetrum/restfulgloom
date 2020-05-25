@@ -1,4 +1,4 @@
-package ca.flearning.restfulgloom.rest.hateoas;
+package ca.flearning.restfulgloom.rest.dto;
 
 import java.util.HashMap;
 import java.util.Map;

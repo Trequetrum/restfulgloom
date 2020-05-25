@@ -19,7 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Value("${ca.flearning.restfulgloom.api.security.enabled}")
-	private boolean secure;
+	private boolean secure = false;
 	
 	@Autowired
 	private DataSource datasource;

@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.flearning.restfulgloom.dao.RefreshTokenRepository;
 import ca.flearning.restfulgloom.entities.RefreshToken;
+import ca.flearning.restfulgloom.rest.dto.TokenDto;
 import ca.flearning.restfulgloom.rest.errors.ForbiddenException;
-import ca.flearning.restfulgloom.rest.hateoas.TokenDto;
-import ca.flearning.restfulgloom.security.GenerateRefreshToken;
+import ca.flearning.restfulgloom.security.RefreshTokenGenerator;
 import ca.flearning.restfulgloom.security.JWTToken;
 import ca.flearning.restfulgloom.security.User;
 
@@ -26,28 +26,30 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 public class LoginController {
 
 	@Autowired
-    private static RefreshTokenRepository refreshTokenRepository;
+    private RefreshTokenRepository refreshTokenRepository;
+	@Autowired
+	private RefreshTokenGenerator refreshTokenGenerator;
 	
     @PostMapping("/devlogin")
-    public TokenDto devLogin(@RequestParam(value = "name", defaultValue = "World") String name)
+    public TokenDto devLogin(@RequestParam(value = "name", defaultValue = "World") String name) throws Exception
     {
         User user = new User();
         user.setName(name);
         JWTToken jwt = new JWTToken(user);
 
-
         // create a refresh token and persist it to the db
-        RefreshToken refreshToken = GenerateRefreshToken.generateToken(user);
-
+        RefreshToken refreshToken = refreshTokenGenerator.generateToken(user);
+        
         // return token with a link to refresh the token
         TokenDto rtn = new TokenDto(jwt.getCredentials().getToken());
         rtn.add(linkTo(methodOn(LoginController.class).refresh(refreshToken.getToken())).withRel("refresh"));
+        
         return rtn;
     }
 
 
     @GetMapping("/refresh/{refreshToken}")
-    public TokenDto refresh(@PathVariable("refreshToken") String refreshTokenStr) {
+    public TokenDto refresh(@PathVariable("refreshToken") String refreshTokenStr) throws Exception {
         JWTToken token;
 
         List<RefreshToken> refreshTokenList = refreshTokenRepository.findByToken(refreshTokenStr);
@@ -69,7 +71,7 @@ public class LoginController {
             token = new JWTToken(user);
 
             // create a refresh token and persist it to the db
-            RefreshToken newRefreshToken = GenerateRefreshToken.generateToken(user);
+            RefreshToken newRefreshToken = refreshTokenGenerator.generateToken(user);
             
            
             // return token with a link to refresh the token

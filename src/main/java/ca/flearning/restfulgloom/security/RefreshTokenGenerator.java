@@ -6,18 +6,20 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.codec.Hex;
+import org.springframework.stereotype.Component;
 
 import ca.flearning.restfulgloom.dao.RefreshTokenRepository;
 import ca.flearning.restfulgloom.entities.RefreshToken;
 
-public final class GenerateRefreshToken {
+@Component
+public final class RefreshTokenGenerator {
 	private static final int REFRESH_TOKEN_LEN = 16;
     private static final long EXPIRATION_TIME = 86_400_000;  // 24 hours
 
     @Autowired
-    private static RefreshTokenRepository refreshTokenRepository;
+    private RefreshTokenRepository refreshTokenRepository;
     
-    public static RefreshToken generateToken() {
+    public RefreshToken generateToken() {
         RefreshToken refreshToken = new RefreshToken();
         try {
             // generate a 32 byte random
@@ -32,22 +34,25 @@ public final class GenerateRefreshToken {
         return refreshToken;
     }
     
-    public static RefreshToken generateToken(User user) {
-        // create a refresh token and persist it to the db
-        RefreshToken refreshToken = generateToken();
+    public RefreshToken generateToken(User user) throws Exception {
+    	return generateToken(user, 1);
+    }
+    
+    private RefreshToken generateToken(User user, int attempt) throws Exception {
+    	
+    	RefreshToken refreshToken = generateToken();
         refreshToken.setUsername(user.getName());
+        
         try {
             refreshTokenRepository.save(refreshToken);
         } catch (Exception e) {
-            // probably the random token happened to be a duplicate, and the DB threw
-            // a constraint violation.
-            // Try again.
-
-            refreshToken = GenerateRefreshToken.generateToken();
-            refreshToken.setUsername(user.getName());
-            refreshTokenRepository.save(refreshToken);
+        	if(attempt > 5) {
+        		throw e;
+        	}else {
+        		generateToken(user, attempt+1);
+        	}
         }
-
+        
         return refreshToken;
     }
 }

@@ -41,7 +41,7 @@ public class GCharacter {
 	@Column(name="check_marks")
 	private int checkMarks = -1;
 	
-	@ManyToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	@ManyToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	@JoinColumn(name="wallet_id")
 	private Wallet wallet = new Wallet();
 	

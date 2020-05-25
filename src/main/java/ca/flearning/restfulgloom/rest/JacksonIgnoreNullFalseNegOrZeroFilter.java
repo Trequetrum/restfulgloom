@@ -38,10 +38,9 @@ public class JacksonIgnoreNullFalseNegOrZeroFilter extends SimpleBeanPropertyFil
 				}else if(writerValue == null) {
 					return;
 				}else if(writerValue instanceof PersistentBag) {
-					System.out.println("  >> PersistentBag: " + writer.getName());
-					//if(((PersistentBag)writerValue).empty()) return;
+					if(((PersistentBag)writerValue).isEmpty()) return;
 				}else {
-					System.out.println("  >> " + writerValue.getClass().getSimpleName());
+					// TODO: Deal with Long and Double?
 				}
 				
 			}catch(Exception e){e.printStackTrace();} // Ignoring exceptions is wanted behavior here
