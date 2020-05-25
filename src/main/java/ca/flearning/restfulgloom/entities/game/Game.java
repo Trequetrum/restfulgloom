@@ -1,6 +1,7 @@
 package ca.flearning.restfulgloom.entities.boardstate;
 
 
+import ca.flearning.restfulgloom.rest.errors.InconsistentBoardstateException;
 import com.sun.istack.NotNull;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 
@@ -54,6 +55,20 @@ public class Boardstate {
                 throw new HttpMessageNotReadableException("'id' not unique.");
             }
         }
+    }
+
+    /**
+     * Check for internal consistency of the board state:
+     *   - Characters outside the grid
+     *   - Multiple characters on the same hex
+     *   - Characters in the same hex as an obstacle
+     *   - etc
+     *
+     * @throws RuntimeException if the state fails the consistency checks.
+     *              getMessage() will contain details abouth why.
+     */
+    public void checkConsistency() throws InconsistentBoardstateException {
+
     }
 
     /**

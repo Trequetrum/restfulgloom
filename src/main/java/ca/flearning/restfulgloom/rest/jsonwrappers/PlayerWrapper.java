@@ -1,7 +1,6 @@
 package ca.flearning.restfulgloom.rest.jsonwrappers;
 
-import ca.flearning.restfulgloom.entities.boardstate.Boardstate;
-import ca.flearning.restfulgloom.entities.boardstate.PlayerCharacter;
+import ca.flearning.restfulgloom.entities.game.PlayerCharacter;
 
 public class PlayerCharacterWrapper extends BoardstateWrapper {
     PlayerCharacter player;
